@@ -1,0 +1,4 @@
+[program:house-cup-sidekiq]
+command: /bin/bash --login -c "bundle exec sidekiq -e {{rails_environment}} -C {{project_root}}/config/sidekiq.yml"
+directory: {{project_root}}
+startsecs: 30

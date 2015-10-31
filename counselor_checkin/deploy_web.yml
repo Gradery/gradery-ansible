@@ -38,7 +38,9 @@
         name: libpq-dev
         state: latest
     - name: Install Bundler
-      shell: gem install bundler
+      gem:
+        name: bundler
+        state: latest
     - name: Clone git repo
       git:
         accept_hostkey: yes

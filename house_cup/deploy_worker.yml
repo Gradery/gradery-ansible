@@ -21,17 +21,18 @@
       username: 
       password: 
       domain: 
-    redis_url: redis://
+    redis_url: 
     fog:
       aws_access_key: 
       aws_secret_key: 
       bucket: 
       wkhtmltopdf_binary: /usr/local/bin/wkhtmltopdf
+    sidekiq:
+      concurrency: 5
   remote_user: vagrant
   become: yes
   roles:
      - rvm
-     - nginx-passenger
   tasks:
     - name: Install git
       apt:
@@ -56,6 +57,10 @@
     - name: Install libmagickwand-dev
       apt:
         name: libmagickwand-dev
+        state: latest
+    - name: Install Supervisord
+      apt:
+        name: supervisor
         state: latest
     - name: Install Bundler
       gem:
@@ -87,27 +92,20 @@
       template:
         src: "config/initializers/fog.rb.j2"
         dest: "{{project_root}}/config/initializers/fog.rb"
-    - name: Upload Nginx main config
+    - name: Upload Sidekiq config file
       template:
-        src: "config/nginx/nginx.conf.j2"
-        dest: "/etc/nginx/nginx.conf"
-        force: yes
-    - name: remove default site
-      file:
-        path: /etc/nginx/sites-available/default
-        state: absent
-    - name: remove default site
-      file:
-        path: /etc/nginx/sites-enabled/default
-        state: absent
-    - name: Upload project Nginx config
+        src: "config/sidekiq.yml.j2"
+        dest: "{{project_root}}/config/sidekiq.yml"
+    - name: Upload Supervisord config file
       template:
-        src: "config/nginx/site.conf.j2"
-        dest: "/etc/nginx/sites-enabled/house_cup.conf"
-        force: yes
-      notify:
-      - nginx restart
-    - name: Precompile assets
-      shell: "RAILS_ENV={{rails_environment}} rake assets:precompile"
-      args:
-        chdir: "{{project_root}}"
+        src: "config/supervisord.conf.j2"
+        dest: "/etc/supervisor/conf.d/house_cup.conf"
+    - name: Make PIDs folder
+      file: 
+        path: "{{project_root}}/tmp/pids"
+        state: directory
+    - name: Restart Supervisord
+      service:
+        name: supervisor
+        enabled: yes
+        state: restarted
