@@ -1,8 +1,0 @@
----
-- hosts: web
-  vars:
-    rvm_install_type: user
-    rvm_default_ruby_version: ruby-2.2.3
-  remote_user: vagrant
-  roles:
-     - altermn.rvm

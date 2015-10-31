@@ -1,0 +1,13 @@
+server {
+	listen 80 {{url}};
+	listen [::]:80 {{url}};
+
+	root {{project_root}}/public;
+
+	passenger_enabled on;
+	passenger_friendly_error_pages on;
+
+	index index.html;
+
+	server_name _;
+}
