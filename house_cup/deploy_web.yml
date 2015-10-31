@@ -3,10 +3,10 @@
   vars:
     rvm1_rubies:
       - 'ruby-2.2.3'
-    project_root: /var/www/counselor_checkin
-    repo_url: https://github.com/Gradery/counselor_checkin.git
+    project_root: /var/www/house_cup
+    repo_url: https://github.com/Gradery/house-cup.git
     rails_environment: production
-    url: cc.gradery.com
+    url: hc.gradery.com
     db: 
       host: 
       name: 
@@ -15,6 +15,18 @@
       username: 
       password: 
     secret_key_base: 
+    email:
+      host: 
+      port: 587
+      username: 
+      password: 
+      domain: 
+    redis_url: redis://
+    fog:
+      aws_access_key: 
+      aws_secret_key: 
+      bucket: 
+      wkhtmltopdf_binary: /usr/local/bin/wkhtmltopdf
   remote_user: vagrant
   become: yes
   roles:
@@ -36,6 +48,14 @@
     - name: Install libpq-dev
       apt:
         name: libpq-dev
+        state: latest
+    - name: Install ImageMagick
+      apt:
+        name: imagemagick
+        state: latest
+    - name: Install libmagickwand-dev
+      apt:
+        name: libmagickwand-dev
         state: latest
     - name: Install Bundler
       shell: gem install bundler
@@ -61,6 +81,10 @@
       template:
         src: "config/environments/{{rails_environment}}.rb.j2"
         dest: "{{project_root}}/config/environments/{{rails_environment}}.rb"
+    - name: Upload fog initializer file
+      template:
+        src: "config/initializers/fog.rb.j2"
+        dest: "{{project_root}}/config/initializers/fog.rb"
     - name: Upload Nginx main config
       template:
         src: "config/nginx/nginx.conf.j2"
@@ -77,7 +101,7 @@
     - name: Upload project Nginx config
       template:
         src: "config/nginx/site.conf.j2"
-        dest: "/etc/nginx/sites-enabled/counselor_checkin.conf"
+        dest: "/etc/nginx/sites-enabled/house_cup.conf"
         force: yes
       notify:
       - nginx restart
@@ -85,5 +109,3 @@
       shell: "RAILS_ENV={{rails_environment}} rake assets:precompile"
       args:
         chdir: "{{project_root}}"
-
-

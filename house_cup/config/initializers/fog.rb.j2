@@ -1,0 +1,6 @@
+Rails.configuration.s3 = Fog::Storage.new(:provider => 'AWS', :aws_access_key_id => "{{fog.aws_access_key}}", :aws_secret_access_key => "{{fog.aws_secret_key}}")
+Rails.configuration.s3_bucket = Rails.configuration.s3.directories.get("{{fog.bucket}}")
+
+PDFKit.configure do | config |
+  config.wkhtmltopdf = '{{fog.wkhtmltopdf_binary}}'
+end
