@@ -52,15 +52,15 @@
     - name: Upload database file
       template:
         src: config/database.yml.j2
-        dest: /var/www/counselor_checkin/config/database.yml
+        dest: "{{project_root}}/config/database.yml"
     - name: Upload secrets file
       template:
         src: config/secrets.yml.j2
-        dest: /var/www/counselor_checkin/config/secrets.yml
+        dest: "{{project_root}}/config/secrets.yml"
     - name: Upload environments file
       template:
         src: "config/environments/{{rails_environment}}.rb.j2"
-        dest: "/var/www/counselor_checkin/config/environments/{{rails_environment}}.rb"
+        dest: "{{project_root}}/config/environments/{{rails_environment}}.rb"
     - name: Upload Nginx main config
       template:
         src: "config/nginx/nginx.conf.j2"
