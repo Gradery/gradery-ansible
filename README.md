@@ -29,4 +29,6 @@ ansible-playbook counselor_checkin/provision_servers.yaml -i .vagrant/provisione
 
 [Nginx-passenger](https://github.com/abtris/nginx-passenger) role provided by [abtris](https://github.com/abtris)
 
-Both projects have their own licenses. You are responsible for complying with their licenses if you use their roles.
+[Elasticsearch](https://galaxy.ansible.com/detail#/role/1450) role (and the Java role dependency for Elasticsearch) provided by [geerlingguy](https://github.com/geerlingguy)
+
+All dependent projects have their own licenses. You are responsible for complying with their licenses if you use their roles.

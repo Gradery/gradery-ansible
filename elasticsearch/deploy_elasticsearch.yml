@@ -1,0 +1,29 @@
+---
+- hosts: default
+  remote_user: vagrant
+  become: yes
+  vars:
+    elasticsearch:
+      cluster_name: 
+      node:
+        master: "true"
+        data: "true"
+        max_local_storage_nodes: 1
+      index:
+        number_of_shards: 5
+        number_of_replicas: 1
+      discovery:
+        zen:
+          minimum_master_nodes: 1
+          ping:
+            timeout: 5s
+  roles:
+    - { role: geerlingguy.java }
+    - { role: geerlingguy.elasticsearch }
+  tasks:
+    - name: Copy over config file
+      template:
+        src: config/elasticsearch.yml.j2
+        dest: /etc/elasticsearch/elasticsearch.yml
+      notify:
+        - restart elasticsearch 
